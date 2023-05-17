@@ -1,2 +1,4 @@
-sensitive.py
+config.py
 .vscode
+__pycache__
+ 

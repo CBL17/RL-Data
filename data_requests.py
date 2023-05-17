@@ -1,6 +1,6 @@
 import requests
 from pandas import DataFrame, Series, json_normalize, read_csv
-import time
+from time import sleep
 
 def get_games(parameters: dict, api_key: str) -> DataFrame:
 
@@ -22,11 +22,11 @@ def get_players_csv(id: str) -> DataFrame:
     try:
         df = read_csv(f'https://ballchasing.com/dl/stats/players/{id}/{id}-players.csv', sep=';')
     except:
-        time.sleep(5)
+        sleep(5)
         df = read_csv(f'https://ballchasing.com/dl/stats/players/{id}/{id}-players.csv', sep=';')
 
     df = df.T
-    
+
     return df
 
 
@@ -35,7 +35,7 @@ def get_teams_csv(id: str) -> DataFrame:
     try:
         df = read_csv(f'https://ballchasing.com/dl/stats/teams/{id}/{id}-team-stats.csv', sep=';') # need to build in error handlding to the function here
     except:
-        time.sleep(5)
+        sleep(5)
         df = read_csv(f'https://ballchasing.com/dl/stats/teams/{id}/{id}-team-stats.csv', sep=';')
     
     df = df.set_index('color').T

@@ -1,13 +1,12 @@
 from dataclasses import dataclass
-from numpy import uint8, uint16, uint32, float16, float32
+from numpy import uint8, uint16, uint32, float16
 
 # 0_boost_time == no_boost_time
 # 100_boost_time == full_boost_time
 
 @dataclass
 class Team:
-    color: str
-    team_name: str
+    team_name: object
     game_duration: uint16
     score: uint16
     goals: uint8

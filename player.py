@@ -1,80 +1,49 @@
 from dataclasses import dataclass
-from numpy import uint8, uint16, uint32, float16, float32
+from numpy import int8, uint8, uint16, uint32, float16
+import stat_classes as sc
 
-# 0_boost_time == no_boost_time
-# 100_boost_time == full_boost_time
+# @dataclass
+# class Player: 
+#     start_time: float16
+#     end_time: float16
+#     name: object
+#     car_id: uint32
+#     car_name: object
+#     mvp: bool
+#     steering_sensitivity: float16
+#     platform: object
+#     platform_id: object
+#     demo_inflicted: uint8
+#     demo_taken: uint8
+#     rank_id: object
+#     rank_tier: uint8
+#     rank_division: uint8
+#     rank_name: object
+#     camera_settings: sc.CameraSettings
+#     core_stats: sc.CoreStats
+#     boost_stats: sc.BoostStats
+#     movement_stats: sc.MovementStats
+#     positioning_stats: sc.PositioningStats
 
 @dataclass
 class Player: 
-    color: str
-    team_name: str
-    player_name: str
-    platform: str
-    player_id: uint16
-    car_id: int
-    car_name: str
-    game_duration: uint16
-    score: uint16
-    goals: uint8
-    assists: uint8
-    saves: uint8
-    shots: uint8
-    shots_conceded: uint8
-    goals_conceded: uint8
-    goals_conceded_while_last_defender: uint8
-    shooting_percentage: uint8
-    bpm: uint16
-    avg_boost_amount: float16
-    amount_collected: uint16
-    amount_collected_big_pads: uint16
-    amount_collected_small_pads: uint16
-    count_collected_big_pads: uint8
-    count_collected_small_pads: uint8
-    amount_stolen: uint16
-    amount_stolen_big_pads: uint16
-    amount_stolen_small_pads: uint16
-    count_stolen_big_pads: uint8
-    count_stolen_small_pads: uint8
-    no_boost_time: float16
-    full_boost_time: float16
-    amount_used_while_supersonic: uint16
-    amount_overfill_total: uint16
-    amount_overfill_stolen: uint16
-    avg_speed: uint16
-    total_distance: uint32
-    time_slow_speed: float16
-    percentage_slow_speed: float16
-    time_boost_speed: float16
-    percentage_boost_speed: float16
-    time_supersonic_speed: float16
-    percentage_supersonic_speed: float16
-    time_on_ground: float16
-    percentage_on_ground: float16
-    time_low_in_air: float16
-    percentage_low_in_air: float16
-    time_high_in_air: float16
-    percentage_high_in_air: float16
-    time_powerslide: float16
-    avg_powerslide_time: float16
-    count_powerslide: uint16
-    time_most_back: float16
-    time_most_forward: float16
-    avg_distance_to_ball: uint16
-    avg_distance_to_ball_has_possession: uint16
-    avg_distance_to_ball_no_possession: uint16
-    time_behind_ball: float16
-    percentage_behind_ball: float16
-    time_in_front_of_ball: float16
-    percentage_in_front_of_ball: float16
-    time_defensive_half: float16
-    percentage_defensive_half: float16
-    time_offensive_half: float16
-    percentage_offensive_half: float16
-    time_defensive_third: float16
-    percentage_defensive_third: float16
-    time_neutral_third: float16
-    percentage_neutral_third: float16
-    time_offensive_third: float16
-    percentage_offensive_third: float16
-    demos_inflicted: uint8
-    demos_taken: uint8
+    start_time: object
+    end_time: object
+    name: object
+    car_id: object
+    car_name: object
+    mvp: object
+    steering_sensitivity: object
+    platform: object
+    platform_id: object
+    demo_inflicted: object
+    demo_taken: object
+    rank_id: object
+    rank_tier: object
+    rank_division: object
+    rank_name: object
+    camera_settings: sc.CameraSettings
+    core_stats: sc.CoreStats
+    boost_stats: sc.BoostStats
+    movement_stats: sc.MovementStats
+    positioning_stats: sc.PositioningStats

@@ -1,55 +1,101 @@
+from typing import Any
 from requests import get
-from time import sleep
-from player import Player
-import stat_classes as sc
-from team import Team
-from pandas import DataFrame, json_normalize, read_csv, concat
+from pandas import DataFrame, json_normalize, read_csv, concat, Series
 
-def get_games(parameters: dict, api_key: str, num_requests: int) -> DataFrame:
+def game_request(keywords: dict, num_req: int, API_KEY: str) -> Series:
+    '''
+    Calls ballchasing API and converts the response to a json
+    and puts it into a Series
+
+    Args:
+        keywords (dict): search criteria, required
+        num_requests (int): number of times to call from API 
+        API_KEY (str): key to access API, required
+
+    Returns: 
+        Series: game-by-game info in json
+    '''
+
+    games = Series()
 
     api_url = 'https://ballchasing.com/api/replays'
-    df = DataFrame()
 
-    for UNUSED in range(num_requests):
 
-        del UNUSED
+    for _ in range(num_req):
+        
+        request = get(api_url, params=keywords, headers={'Authorization': API_KEY}, timeout=10)
+        request_json = request.json()
 
-        api_request = get(api_url, params=parameters, headers={'Authorization': api_key})
-        request_json = api_request.json()
+        games.at[games.size] = request_json
 
         api_url = request_json['next']
 
-        new_data = json_normalize(request_json, record_path=['list'], sep='.')
+    return games
 
-        new_data = new_data.drop(['link', 'rocket_league_id', 'replay_title', 'map_code',
-       'playlist_id', 'playlist_name', 'duration', 'overtime', 'season',
-       'season_type', 'date', 'date_has_tz', 'visibility', 'created',
-       'min_rank.tier', 'min_rank.division', 'min_rank.name', 'min_rank.id',
-       'max_rank.tier', 'max_rank.division', 'max_rank.name', 'max_rank.id',
-       'uploader.steam_id', 'uploader.name', 'uploader.profile_url',
-       'uploader.avatar', 'blue.goals', 'map_name', 'orange.goals',
-       'overtime_seconds', 'blue.players', 'orange.players'], axis=1)
+
+def stat_request(id: str, API_KEY: str) -> Any:
+    '''Calls ballchasing API and converts the response to a json
+
+    Parameters
+    ----------
+    id : str
+        game id
+    API_KEY : str
+        key to access API
+
+    Returns
+    -------
+    Any
+        stats of game in json
+    '''    
+
+    request = get(f'https://ballchasing.com/api/replays/{id}', headers={'Authorization': API_KEY}, timeout=10)
+
+    return request.json()
+
+# def get_games(parameters: dict, api_key: str, num_requests: int) -> DataFrame:
+
+#     api_url = 'https://ballchasing.com/api/replays'
+#     df = DataFrame()
+
+#     for UNUSED in range(num_requests):
+
+#         del UNUSED
+
+#         api_request = get(api_url, params=parameters, headers={'Authorization': api_key})
+#         request_json = api_request.json()
+
+#         api_url = request_json['next']
+
+#         new_data = json_normalize(request_json, record_path=['list'], sep='.')
+
+#         new_data = new_data.drop(['link', 'rocket_league_id', 'replay_title', 'map_code',
+#        'playlist_id', 'playlist_name', 'duration', 'overtime', 'season',
+#        'season_type', 'date', 'date_has_tz', 'visibility', 'created',
+#        'min_rank.tier', 'min_rank.division', 'min_rank.name', 'min_rank.id',
+#        'max_rank.tier', 'max_rank.division', 'max_rank.name', 'max_rank.id',
+#        'uploader.steam_id', 'uploader.name', 'uploader.profile_url',
+#        'uploader.avatar', 'blue.goals', 'map_name', 'orange.goals',
+#        'overtime_seconds', 'blue.players', 'orange.players'], axis=1)
         
-        for column_name in ['link', 'created', 'status', 'rocket_league_id', 'match_guid',
-       'title', 'map_code', 'match_type', 'team_size', 'playlist_id',
-       'duration', 'overtime', 'season', 'season_type', 'date',
-       'date_has_timezone', 'visibility', 'playlist_name', 'map_name',
-       'uploader.steam_id', 'uploader.name', 'uploader.profile_url',
-       'uploader.avatar', 'min_rank.id', 'min_rank.tier', 'min_rank.division',
-       'min_rank.name', 'max_rank.id', 'max_rank.tier', 'max_rank.division',
-       'max_rank.name','blue_p1','blue_p2','orange_p1','orange_p2']:
-            new_data.insert(new_data.columns.size, column_name, None)
+#         for column_name in ['link', 'created', 'status', 'rocket_league_id', 'match_guid',
+#        'title', 'map_code', 'match_type', 'team_size', 'playlist_id',
+#        'duration', 'overtime', 'season', 'season_type', 'date',
+#        'date_has_timezone', 'visibility', 'playlist_name', 'map_name',
+#        'uploader.steam_id', 'uploader.name', 'uploader.profile_url',
+#        'uploader.avatar', 'min_rank.id', 'min_rank.tier', 'min_rank.division',
+#        'min_rank.name', 'max_rank.id', 'max_rank.tier', 'max_rank.division',
+#        'max_rank.name','blue_p1','blue_p2','orange_p1','orange_p2']:
+#             new_data.insert(new_data.columns.size, column_name, None, False)
         
-        df = concat([df, new_data]).reset_index(drop=True)
+        # new_data = new_data.astype(dtype={})
+        
+#         df = concat([df, new_data]).reset_index(drop=True)
 
-# basically i need to first only get a series of the id's of games and then plug them into get_stats
+#     return df
 
-# The problem is that's a lot of api calls to do get_stats for every row, so the Dataframe
-# needs to be created with the correct columns before the good data is gotten from get_stats
-
-
-    return df
-
+# what i want to do i think is to make a function that gets the json then passes it for cleaning and whatnot 
+# instead of this giant crigne ass function bs 
 
 def get_game_info(id: str, api_key: str) -> DataFrame:
 
@@ -58,7 +104,7 @@ def get_game_info(id: str, api_key: str) -> DataFrame:
     request_json.pop('blue')
     request_json.pop('orange')
 
-    base = DataFrame(columns=[
+    base = DataFrame(columns=[\
     'start_time',
     'end_time',
     'name',
@@ -186,6 +232,7 @@ def get_game_info(id: str, api_key: str) -> DataFrame:
 
 
     return abc
+
 
 # def get_players_csv(id: str) -> DataFrame:
 
